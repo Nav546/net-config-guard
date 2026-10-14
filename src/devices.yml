@@ -1,0 +1,9 @@
+defaults:
+  device_type: nokia_srl
+  username: admin
+  password: NokiaSrl1!
+  show_command: "info flat"
+devices:
+  - host: clab-ncg-r1
+  - host: clab-ncg-r2
+  - host: clab-ncg-r3
