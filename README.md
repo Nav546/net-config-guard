@@ -85,11 +85,12 @@ sudo containerlab destroy -t topology/lab.clab.yml --cleanup
 | `src/backup.py` | Pulls configs over SSH and saves them |
 | `src/drift.py` | Compares configs, writes the report, sets the exit code |
 | `tests/` | Unit tests for the drift logic |
+| `infra/storage.bicep` | Bicep template for the Azure Blob container that stores config backups |
 
 ## Roadmap
 
 - [ ] GitHub Actions workflow to run the check on a schedule
-- [ ] Store config backups in Azure Blob Storage (Bicep for the storage account)
+- [x] Azure storage account and container defined in Bicep (`infra/storage.bicep`); pipeline upload still to do
 - [ ] Optional auto-remediation: push the golden config back when drift is detected
 - [ ] CCNA-style lab: configure VLANs, OSPF and ACLs by script, then audit them
 
