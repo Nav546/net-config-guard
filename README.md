@@ -8,7 +8,7 @@ router over SSH with Netmiko, saves the running config, and compares it with a k
 
 ## How it works
 
-```
+~~~
 Containerlab lab (r1, r2, r3)
         |  SSH (Netmiko)
         v
@@ -17,24 +17,64 @@ Containerlab lab (r1, r2, r3)
                           |
                           v
                  src/drift.py  -->  drift-report.md + exit code (0 clean, 1 drift)
-```
+~~~
 
 ## Quick start
 
 Requires Linux with Docker and [Containerlab](https://containerlab.dev/install/).
 
-```bash
+~~~bash
 python3 -m venv .venv && source .venv/bin/activate
 pip install -r requirements.txt
 pytest -q
 
 sudo containerlab deploy -t topology/lab.clab.yml   # wait about a minute for the routers to boot
 
-pytho
+python src/backup.py --out golden                   # save the baseline
+python src/backup.py --out backups/latest --archive # take a current backup
+python src/drift.py                                 # compare
+~~~
+
+## Demo: catching a manual change
+
+Change something on r1 by hand:
+
+~~~
+docker exec -it clab-ncg-r1 sr_cli
+enter candidate
+set / system information location "changed-by-hand"
+commit now
+~~~
+
+Back up again and re-run the check:
+
+~~~bash
+python src/backup.py --out backups/latest
+python src/drift.py
+~~~
+
+Output:
+
+~~~diff
+# Config drift report
+
+**2 of 3 devices match baseline.**
+
+## clab-ncg-r1
+--- golden
++++ current
+@@ -643,2 +643,3 @@
++set / system information location changed-by-hand
+ set / system netconf-server mgmt admin-state enable
+~~~
 
 The script exits with code 1 when drift is found, so it can fail a CI job.
 
-Clean up the lab with `sudo containerlab destroy -t topology/lab.clab.yml --cleanup`.
+Clean up the lab with:
+
+~~~bash
+sudo containerlab destroy -t topology/lab.clab.yml --cleanup
+~~~
 
 ## Project layout
 
