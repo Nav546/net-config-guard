@@ -1,5 +1,13 @@
 # net-config-guard
 
+## In plain English
+
+Imagine a building with a lock on every door. You take a photo of how everything should look today. Every so often you check again and compare it with the photo. If someone has quietly changed a lock or left a door open, you spot it straight away and know exactly which door.
+
+This project does that for computer networks. The "doors" are the settings on network equipment, the devices that connect offices and the internet. If a setting is changed by mistake or without permission, it can cause outages or security problems. This tool notices the change quickly and shows exactly what was changed and where.
+
+## Technical summary
+
 Network configuration backup and drift detection for a virtual lab.
 
 A small 3-router network runs in Containerlab (Nokia SR Linux). A Python script logs into every
